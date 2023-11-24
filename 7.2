@@ -11,7 +11,7 @@ struct ColorPoint {
 
 void f(struct ColorPoint **points, int n, long *dest) {
     long sum = 0;
-    
+
     // Memory reads for points[0][0].a, points[0][0].r, etc.
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -27,9 +27,9 @@ void f(struct ColorPoint **points, int n, long *dest) {
             // Check if the tag matches the current content of the cache
             // Assume cache is initially empty
             if (tag == 0) {
-                printf("Cache Hit for points[%d][%d].a\n", i, j);
+                // printf("Cache Hit for points[%d][%d].a\n", i, j);
             } else {
-                printf("Cache Miss for points[%d][%d].a\n", i, j);
+                // printf("Cache Miss for points[%d][%d].a\n", i, j);
             }
 
             // Similar calculations for points[i][j].r, points[i][j].g, and points[i][j].b
@@ -51,7 +51,7 @@ void f(struct ColorPoint **points, int n, long *dest) {
 
 void g(struct ColorPoint **points, int n, long *dest) {
     long sum = 0;
-    
+
     // Memory reads for points[0][0].a, points[0][0].r, etc.
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -67,9 +67,9 @@ void g(struct ColorPoint **points, int n, long *dest) {
             // Check if the tag matches the current content of the cache
             // Assume cache is initially empty
             if (tag == 0) {
-                printf("Cache Hit for points[%d][%d].a\n", j, i);
+                // printf("Cache Hit for points[%d][%d].a\n", j, i);
             } else {
-                printf("Cache Miss for points[%d][%d].a\n", j, i);
+                // printf("Cache Miss for points[%d][%d].a\n", j, i);
             }
 
             // Similar calculations for points[j][i].r, points[j][i].g, and points[j][i].b
@@ -119,12 +119,9 @@ void free2DArray(struct ColorPoint** points, int n) {
 void measureTime(struct ColorPoint** points, int n, void (*func)(struct ColorPoint**, int, long*), const char* funcName) {
     clock_t start, end;
     long dest;
-    int iterations = 100;
 
     start = clock();
-    for (int i = 0; i < iterations; ++i) {
-        func(points, n, &dest);
-    }
+    func(points, n, &dest);
     end = clock();
 
     double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
@@ -147,7 +144,6 @@ int main() {
     return 0;
 }
 
-
 //   The relative speed of f and g can be influenced by the memory access patterns and how well
 //   these patterns align with the cache organization. The f function accesses memory in a
 //   row-major order, while the g function accesses memory in a column-major order.
@@ -161,4 +157,3 @@ int main() {
   
 //   However, the actual performance can be influenced by various factors, and the results may vary
 //   based on the specific hardware architecture and compiler optimizations.
- 
