@@ -45,9 +45,19 @@ void f(struct ColorPoint **points, int n, long *dest) {
     *dest = sum;
 }
 
-// In the given scenario, the pattern of hits and misses may not continue throughout the execution of the procedure due to the row-major order of memory access. 
-// As the procedure iterates through the rows (i), the memory accesses for different rows may not be in contiguous locations, causing cache misses. 
-// The specific pattern will depend on the alignment and arrangement of ColorPoint structures in memory.
+// Given n = 4, the first 8 memory reads would correspond to:
+
+// points[0][0].a
+// points[0][0].r
+// points[0][0].g
+// points[0][0].b
+// points[0][1].a
+// points[0][1].r
+// points[0][1].g
+// points[0][1].b
+
+// The pattern of hits will likely continue throughout execution due to spatial locality. 
+// As the loop iterates over the rows (i), the memory accesses are sequential, and the data in the same cache block is reused, resulting in cache hits.
 
 void g(struct ColorPoint **points, int n, long *dest) {
     long sum = 0;
@@ -85,11 +95,20 @@ void g(struct ColorPoint **points, int n, long *dest) {
     *dest = sum;
 }
 
-// The calculations for the cache hits and misses in g follow the same logic as in the f procedure.
-// The pattern of hits and misses may not continue throughout the execution of the procedure. 
-// The reason is that, in the row-major memory layout, the memory accesses for different columns (j) may not be in contiguous locations, causing cache misses. 
-// As the procedure iterates through the columns, the memory accesses will be at different locations, and the cache may not be able to maintain a consistent hit pattern.
-// The specific pattern will depend on the alignment and arrangement of ColorPoint structures in memory.
+// Given n = 4, the first 8 memory reads would correspond to:
+
+// points[0][0].a
+// points[0][0].r
+// points[0][0].g
+// points[0][0].b
+// points[1][0].a
+// points[1][0].r
+// points[1][0].g
+// points[1][0].b
+
+// The pattern of hits and misses will likely not continue throughout execution due to the non-contiguous nature of the memory accesses in columns.
+// As the loop iterates over the columns (j), the memory accesses are not sequential, and the data is not in the same cache block, resulting in cache misses. 
+
 
 // SUMMARY
 // In summary, the primary difference between functions f and g is their memory access pattern: f uses a row-major order, and g uses a column-major order. 
@@ -131,7 +150,7 @@ void measureTime(struct ColorPoint** points, int n, void (*func)(struct ColorPoi
 int main() {
     int n = 2048;
     struct ColorPoint **points = create2DArray(n);
-
+    
     // Measure time for function f
     measureTime(points, n, f, "f");
 
